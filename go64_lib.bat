@@ -1,4 +1,9 @@
 @echo off
+
+rem ----------------------
+rem Bat to compile wdo lib
+rem ----------------------
+
 call "%ProgramFiles%\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
 c:\harbour\bin\hbmk2 wdo_lib.hbp -comp=msvc64

@@ -1,5 +1,10 @@
 @echo off
 
+rem --------------------------
+rem Bat to compile app example
+rem --------------------------
+
+
 if exist "%ProgramFiles%\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" call "%ProgramFiles%\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
 del app.exe
