@@ -4,8 +4,10 @@ REQUEST QQOUT
 
 REQUEST WDO_DBF
 REQUEST WDO_MYSQL
+REQUEST WDO_SQLITE3
 
 request DBFCDX
+request HB_RandomInt
 
 function main()
 

@@ -10,9 +10,9 @@ c:\harbour\bin\hbmk2 wdo_lib.hbp -comp=msvc64
 
 IF ERRORLEVEL 1 GOTO COMPILEERROR
 
-@echo -----------------------------
-@echo WDO for UHttpd2 was created !
-@echo -----------------------------
+@echo ------------------------
+@echo WDO for UT was created !
+@echo ------------------------
 
 rem copy wdo.lib c:\uhttpd2.tweb\sample.app\wdo-dbf\lib\wdo\wdo.lib
 

@@ -21,6 +21,7 @@
 src/wdo.prg
 src/wdo_dbf.prg
 src/wdo_mysql.prg
+src/wdo_sqlite3.prg
 src/legacy_func.c
 
 

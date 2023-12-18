@@ -1,7 +1,7 @@
 ﻿![alt text](https://i.postimg.cc/X7cfv1MS/logo.jpg)
 
-WDO for UHttpd2
-===============
+WDO for UT
+==========
 
 Para poder ejecutar loes ejemplo debes crear la base de datos dbharbour con el
 zip que se encuentra en la carpeta \sql\dbharbour.sql.zip 
