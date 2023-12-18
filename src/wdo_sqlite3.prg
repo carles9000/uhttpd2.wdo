@@ -233,6 +233,10 @@ METHOD View() CLASS WDO_Sqlite3_RS
 	LOCAL cHtml 	:= ''
 	LOCAL n, j
 	
+	if empty( ::nCols )
+		retu ''
+	endif
+	
 	//cHtml := '<h3>View table</h3>'		
 	
 	cHtml += '<style>'
