@@ -9,7 +9,12 @@
 		InitCustomer( oDb )
 	endif
 	
+	if !oDb:IsTable( 'states' )	
+		InitStates( oDb )
+	endif
+	
 	? 'Exist table customer? ', oDb:IsTable( 'Customer' )	
+	? 'Exist table states? ', oDb:IsTable( 'states' )	
 	
 	
 RETU ''
@@ -60,6 +65,43 @@ function InitCustomer( oDb )
 	endif		
 	
 retu nil 
+
+function InitStates( oDb )
+
+	local cSql := ''
+	local lCreated 				
+
+	TEXT TO cSql 
+		CREATE TABLE states(
+			id INTEGER PRIMARY KEY AUTOINCREMENT,						
+			code varchar(2), 
+			name varchar(40) )			
+	ENDTEXT	
+	
+	lCreated := oDb:Exec( cSql )
+	
+	? 'Init States ', lCreated
+	
+	if lCreated
+	
+		USE 'data\states.dbf' SHARED NEW 
+		
+		DbGoTop()
+		
+		while !eof()
+		
+			o := oDb:Prepare( 'INSERT INTO states( code, name ) VALUES( :code, :name )' )
+				o:bind( ':code', FIELD->code )
+				o:bind( ':name', FIELD->name )
+				o:Exec()						
+				
+			dbskip()
+		end
+
+	endif		
+	
+retu nil 
+
 
   
 function InitArrays( aFirst, aLast, aStreet, aCity, aState )
