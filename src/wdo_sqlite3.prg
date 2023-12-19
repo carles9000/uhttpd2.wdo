@@ -6,7 +6,6 @@
 	Date:......: 18/12/2023
 	Updated:...: 18/12/2023
 	--------------------------------------------------------- */ 	
-	
 #include 'hbclass.ch'
 #include "error.ch"
 #include "FileIO.ch"
