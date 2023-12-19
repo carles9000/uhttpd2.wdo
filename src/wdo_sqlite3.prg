@@ -145,7 +145,7 @@ CREATE CLASS WDO_Sqlite3_RS //FROM WDO_Sqlite3
 	METHOD FCount() 		INLINE ::nCols
 	METHOD GoTo( n )		INLINE if( n > 0 .and. n <= ::nRows , ::nPos := n, nil )
 	METHOD Row()			
-	METHOD View( )			
+	METHOD View()			
 	
  
 ENDCLASS
