@@ -52,6 +52,8 @@ CLASS WDO_MySql FROM WDO
 	DATA nSysLong
 	DATA nTypePos
 	
+	CLASSDATA lUtf8 							INIT .F.
+	
 	METHOD New() 								CONSTRUCTOR
 		
 	METHOD Query( cSql )	
@@ -94,6 +96,8 @@ CLASS WDO_MySql FROM WDO
 	METHOD VersionName()					INLINE 'WDO_MYSQL ' + VERSION_WDO_MYSQL
 
 	METHOD Exit()
+	METHOD Close()
+	METHOD End()							INLINE ::Close()
 
 ENDCLASS
 
@@ -440,6 +444,8 @@ METHOD Fetch_Assoc( hRes, aNoEscape ) CLASS WDO_MySql
 	
 	hb_default( @aNoEscape, {} )
 	
+	
+	
 	if ( hRow := ::mysql_fetch_row( hRes ) ) != 0
 		
 		if len( aNoEscape ) == 0 
@@ -447,7 +453,11 @@ METHOD Fetch_Assoc( hRes, aNoEscape ) CLASS WDO_MySql
 			if ::lWeb		
 
 				for m = 1 to ::nFields					
-					hReg[ ::aFields[m][1] ] :=  wdo_htmlencode( PtrToStr( hRow, m - 1 ) )			
+					//if ::lUtf8
+					//	hReg[ ::aFields[m][1] ] :=  hb_strtoUtf8(wdo_htmlencode( PtrToStr( hRow, m - 1 ) )	)
+					//else
+						hReg[ ::aFields[m][1] ] :=  wdo_htmlencode( PtrToStr( hRow, m - 1 ) )			
+					//endif
 				next	
 
 			else
@@ -719,10 +729,14 @@ METHOD Exit() CLASS WDO_MySql
 		retu nil
 	endif 
 
+	
+RETU NIL
+
+METHOD Close() CLASS WDO_MySql
 
     IF ValType( ::pLib ) == "P"		
 
-		if( ::lLog, _d( 'WDO Exit proc' ), nil )		
+		if( ::lLog, _d( 'WDO Close proc' ), nil )		
 		
 		::MySql_Close()		
 		
@@ -734,9 +748,8 @@ METHOD Exit() CLASS WDO_MySql
 		//hb_idleSleep( 1 )		
 		
     ENDIF 
-	
-RETU NIL
 
+RETU NIL 
 //	------------------------------------------------------------
 
 function hb_SysLong()
