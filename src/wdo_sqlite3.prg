@@ -53,6 +53,7 @@ METHOD New( cFile, lCreate ) CLASS WDO_Sqlite3
 
 RETU Self
 
+
 METHOD IsTable( cTable ) CLASS WDO_Sqlite3
 
 	local lExist := .f.
