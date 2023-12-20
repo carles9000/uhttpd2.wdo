@@ -30,6 +30,9 @@ CLASS WDO_Sqlite3 //FROM WDO
 	
 	METHOD Prepare( cSql )
 	
+	METHOD Last_Insert_Id()					INLINE sqlite3_last_insert_rowid( ::db ) 
+	METHOD Changes()						INLINE sqlite3_total_changes( ::db )
+	
 	METHOD Version()						INLINE VERSION_WDO_SQLITE3
 	METHOD VersionName()					INLINE 'WDO_SQLITE3 ' + VERSION_WDO_SQLITE3	
  
@@ -124,6 +127,7 @@ METHOD Exec( cSql ) CLASS WDO_Sqlite3
 	end 
 	
 RETU lOk 
+
 
 //	--------------------------------------------------
 
@@ -295,8 +299,11 @@ CREATE CLASS WDO_Sqlite3_Stmt
 	DATA aBinds
 	
 	METHOD New( db, pStmt, cSql  )					
-	METHOD Bind( cKey, uValue )					
-	METHOD Exec()					
+	METHOD Bind( cKey, uValue )		
+	METHOD Exec()
+
+	METHOD Last_Insert_Id()				INLINE ::db:Last_Insert_Id()
+	METHOD Changes()					INLINE ::db:Changes()
  
 ENDCLASS
 
@@ -319,8 +326,9 @@ RETU nil
 
 METHOD Exec() CLASS WDO_Sqlite3_Stmt
 
-	local nI, cKey, nPos, uValue, cType, lOk, lExec
+	local nI, cKey, nPos, uValue, cType, lOk
 	local lError := .f.
+	local lExec  := .f.
 	
 	for nI := 1 to len( ::aBinds )
 		
@@ -384,7 +392,7 @@ METHOD Exec() CLASS WDO_Sqlite3_Stmt
 
 	endif
 
-retu nil 
+retu lExec 
 
 function raiseError( cErrMsg )
 
