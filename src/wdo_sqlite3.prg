@@ -21,6 +21,7 @@ CLASS WDO_Sqlite3 //FROM WDO
 
 	DATA cFile
 	DATA db
+	DATA ltoUtf8 							INIT .t.	
       
 	METHOD New( cFile, lCreate )
 	
@@ -30,7 +31,7 @@ CLASS WDO_Sqlite3 //FROM WDO
 	
 	METHOD Prepare( cSql )
 	
-	METHOD Last_Insert_Id()					INLINE sqlite3_last_insert_rowid( ::db ) 
+	METHOD Last_Insert_Id()				INLINE sqlite3_last_insert_rowid( ::db ) 
 	METHOD Changes()						INLINE sqlite3_total_changes( ::db )
 	
 	METHOD Version()						INLINE VERSION_WDO_SQLITE3
@@ -89,7 +90,7 @@ METHOD Query( cSql ) CLASS WDO_Sqlite3
 		? 'Error: ' + o:description	
 	end 	
 
-retu WDO_Sqlite3_RS():New( aRows )
+retu WDO_Sqlite3_RS():New( aRows, SELF )
 
 // ---------------------------------------------
 
@@ -135,14 +136,16 @@ RETU lOk
 CREATE CLASS WDO_Sqlite3_RS //FROM WDO_Sqlite3
 
 	
+	DATA oWDO
 	DATA aCols  			INIT {}
 	DATA aRows  			INIT {}
 	DATA nRows  			INIT 0
 	DATA nCols  			INIT 0     
 	DATA nPos  				INIT 0   
 	DATA lAssociative		INIT .f.
+
 	
-	METHOD New( aTable )	
+	METHOD New( aTable, oWDO )	
 	
 	METHOD Headers()		INLINE ::aCols
 	METHOD FetchAll()	
@@ -155,11 +158,12 @@ CREATE CLASS WDO_Sqlite3_RS //FROM WDO_Sqlite3
  
 ENDCLASS
 
-METHOD New( aRows ) CLASS WDO_Sqlite3_RS
+METHOD New( aRows, oWDO ) CLASS WDO_Sqlite3_RS
 	
 	hb_default( @aRows, {} )
 	
-	::nRows := len( aRows )
+	::oWDO 		:= oWDO
+	::nRows 	:= len( aRows )
 
 	if ::nRows > 0
 		::nCols := len( aRows[1] )			
@@ -175,7 +179,6 @@ METHOD New( aRows ) CLASS WDO_Sqlite3_RS
 	else
 		::lAssociative	 := .f.
 	endif
-	
 
 RETU SELF
 
@@ -218,15 +221,32 @@ METHOD FetchAll( lAssociative ) CLASS WDO_Sqlite3_RS
 	
 			hReg := {=>}			
 			
-			for nJ := 1 to ::nCols						
-				hReg[ ::aCols[nJ] ] := ::aRows[nI][nJ]
-			next
+			if ::oWDO:ltoUtf8
+				for nJ := 1 to ::nCols											
+					hReg[ ::aCols[nJ] ] := hb_StrToUtf8( ::aRows[nI][nJ] )
+				next						
+			else
+				for nJ := 1 to ::nCols						
+					hReg[ ::aCols[nJ] ] := ::aRows[nI][nJ]					
+				next
+			endif
 		
 			Aadd( aRows, hReg )
 		next 
 		
 		retu aRows		
 	else 	
+	
+		if ::oWDO:ltoUtf8
+			for nI := 1 to ::nRows
+				hReg := array( ::nCols )
+				for nJ := 1 to ::nCols											
+					hReg[ nJ ] := hb_StrToUtf8( ::aRows[nI][nJ] )					
+				next
+				::aRows[nI] := hReg
+			next
+		endif
+	
 		retu ::aRows 
 	endif 	
 	
