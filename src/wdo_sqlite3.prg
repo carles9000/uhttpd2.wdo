@@ -22,6 +22,8 @@ CLASS WDO_Sqlite3 //FROM WDO
 	DATA cFile
 	DATA db
 	DATA ltoUtf8 							INIT .t.	
+	DATA cLast_Sql 							INIT ''
+	DATA cError								INIT ''
       
 	METHOD New( cFile, lCreate )
 	
@@ -32,7 +34,8 @@ CLASS WDO_Sqlite3 //FROM WDO
 	METHOD Prepare( cSql )
 	
 	METHOD Last_Insert_Id()				INLINE sqlite3_last_insert_rowid( ::db ) 
-	METHOD Changes()						INLINE sqlite3_total_changes( ::db )
+	METHOD Changes()						INLINE sqlite3_changes( ::db )
+	METHOD Total_Changes()				INLINE sqlite3_total_changes( ::db )
 	
 	METHOD Version()						INLINE VERSION_WDO_SQLITE3
 	METHOD VersionName()					INLINE 'WDO_SQLITE3 ' + VERSION_WDO_SQLITE3	
@@ -121,11 +124,22 @@ METHOD Exec( cSql ) CLASS WDO_Sqlite3
 
 	local lOk := .f.
 	local o
-	
+
+	::cLast_Sql := cSql 
+	::cError	:= ''
+
 	try 
-		lOk := sqlite3_exec( ::db, cSql ) == SQLITE_OK
+		lOk := sqlite3_exec( ::db, cSql ) == SQLITE_OK						
+		
+		IF sqlite3_errcode( ::db ) != SQLITE_OK
+			::cError := sqlite3_errmsg( ::db ) 			
+			raiseError( ::cError, cSql )
+		ENDIF			
+		
+		
 	catch o 
-		? 'Error ' + o:description
+		
+		? '>> Error ' + o:description
 	end 
 	
 RETU lOk 
@@ -415,12 +429,20 @@ METHOD Exec() CLASS WDO_Sqlite3_Stmt
 
 retu lExec 
 
-function raiseError( cErrMsg )
+function raiseError( cErrMsg, cSql  )
 
-   LOCAL oErr
-   //_d( cErrMsg )
-   //retu nil
-? 'Din s Error...'
+    LOCAL oErr  
+ 
+    hb_default( @cSql, '' )   
+	
+	_d( 'WDO Error Sqlite' )
+   
+    if !empty( cSql )
+		_d( cSql )		
+	endif
+	
+	_d( cErrMsg )		
+
    oErr := ErrorNew()
    oErr:severity := ES_ERROR
    oErr:genCode := EG_OPEN
@@ -429,5 +451,5 @@ function raiseError( cErrMsg )
    oErr:Description := cErrMsg
 
    Eval( ErrorBlock(), oErr )
-? 'Fora Error...'
+
 RETURN nil
