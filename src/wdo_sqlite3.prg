@@ -354,6 +354,7 @@ CREATE CLASS WDO_Sqlite3_Stmt
 	DATA pStmt
 	DATA cSql 
 	DATA aBinds
+	DATA cError  
 	
 	METHOD New( db, pStmt, cSql  )					
 	METHOD Bind( cKey, uValue )		
@@ -386,6 +387,8 @@ METHOD Exec() CLASS WDO_Sqlite3_Stmt
 	local nI, cKey, nPos, uValue, cType, lOk
 	local lError := .f.
 	local lExec  := .f.
+	
+	::cError := ''
 	
 	for nI := 1 to len( ::aBinds )
 		
@@ -433,6 +436,11 @@ METHOD Exec() CLASS WDO_Sqlite3_Stmt
 		next				
 		
 		lExec := sqlite3_step( ::pStmt ) == SQLITE_DONE
+		
+		IF ! lExec .and. sqlite3_errcode( ::db ) != SQLITE_OK
+			_d( 'Error: ' + sqlite3_errmsg( ::db ) )
+			//raiseError( ::cError, cSql )
+		ENDIF			
 		
 		//?? lExec
 		
