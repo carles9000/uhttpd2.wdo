@@ -26,6 +26,7 @@ CLASS WDO_Sqlite3 //FROM WDO
 	DATA cError								INIT ''
       
 	METHOD New( cFile, lCreate )
+	METHOD Close()							
 	
 	METHOD IsTable( cTable )	
 	METHOD Query( cSql )
@@ -57,6 +58,27 @@ METHOD New( cFile, lCreate ) CLASS WDO_Sqlite3
 
 RETU Self
 
+
+METHOD Close() CLASS WDO_Sqlite3
+
+	/*
+	_d( 'Close()------', valtype( ::db)  )
+	
+	if valtype( ::db ) == 'P'
+	_d( 'sqlite3_close()' )
+		sqlite3_close( ::db )
+		
+		IF sqlite3_errcode( ::db ) != SQLITE_OK
+			raiseError( sqlite3_errmsg( ::db ) )
+		ENDIF			
+	endif
+	*/
+	
+	::db := NIL 
+	
+	
+
+RETU NIL
 
 METHOD IsTable( cTable ) CLASS WDO_Sqlite3
 
