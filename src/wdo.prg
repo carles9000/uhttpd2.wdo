@@ -28,7 +28,9 @@ CLASS WDO
 	
 	METHOD SetError( cError )		
 	METHOD GetError()							INLINE ::cError
-	METHOD View( aSt, aData, lShow ) 
+	
+	METHOD View ( aSt, aData, cTitle, lShow ) 
+	METHOD Table( aSt, aData, cTitle )
 	
 ENDCLASS
 
@@ -51,24 +53,31 @@ RETU ''
 
 //	------------------------------------------------------- //
 
+METHOD Table( aSt, aData, cTitle ) CLASS WDO
+RETU ::View( aSt, aData, cTitle, .F. )
 
-METHOD View( aSt, aData, lShow ) CLASS WDO
+//	------------------------------------------------------- //
+
+METHOD View( aSt, aData, cTitle, lShow ) CLASS WDO
 
 	LOCAL nFields 	:= len( aSt )
 	LOCAL cHtml 	:= ''
 	LOCAL n, j, nLen
 	
+	hb_default( @cTitle, '' )
 	hb_default( @lShow, .t. )
 	
-	cHtml := '<h3>View table</h3>'	
+	if !empty( cTitle)
+		cHtml += cTitle
+	endif
 	
 	cHtml += '<style>'
-	cHtml += '#mytable tr:hover {background-color: #ddd;}'
-	cHtml += '#mytable tr:nth-child(even){background-color: #e0e6ff;}'
-	cHtml += '#mytable { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;border-collapse: collapse; width: 100%; }'
-	cHtml += '#mytable thead { background-color: #425ecf;color: white;}'
+	cHtml += '#wdo_mytable tr:hover {background-color: #ddd;}'
+	cHtml += '#wdo_mytable tr:nth-child(even){background-color: #e0e6ff;}'
+	cHtml += '#wdo_mytable { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;border-collapse: collapse; width: 100%; }'
+	cHtml += '#wdo_mytable thead { background-color: #425ecf;color: white;}'
 	cHtml += '</style>'
-	cHtml += '<table id="mytable" border="1" cellpadding="3" >'
+	cHtml += '<table id="wdo_mytable" border="1" cellpadding="3" >'
 	
 	cHtml += '<thead><tr>'
 	
