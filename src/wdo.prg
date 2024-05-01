@@ -18,40 +18,36 @@ thread static hPool
 CLASS WDO	
 
 	DATA cError 								INIT ''
-	DATA bError 								
 	
 	CLASSDATA lShowError						INIT .t.
 	CLASSDATA lLog								INIT .f.
+	CLASSDATA bError 								
 	
 	METHOD VersionName()						INLINE 'WDO UHttpd2'
 	METHOD Version()							INLINE WDO_VERSION
 	
 	METHOD SetError( cError )		
+	METHOD GetError()							INLINE ::cError
 	METHOD View( aSt, aData, lShow ) 
 	
 ENDCLASS
 
-
 METHOD SetError( cError ) CLASS WDO
+	LOCAL cHtml := ''
 
 	::cError := cError
-
-	IF ::lShowError				
-
-		IF Valtype( ::bError ) == 'B'
-
-			//if Eval( ::bError, ::cError )			
-			Eval( ::bError, ::cError )			
 	
-			//endif
-			
-		ELSE		
-			? '<h3><b>Error</b>', ::cError, '</b></h3>'
-		ENDIF
+	IF Valtype( ::bError ) == 'B'			
+		::cError := Eval( ::bError, ::cError )																			
+	ENDIF
+
+	IF ::lShowError										
+
+		? '<h3><b>Error</b>', ::cError, '</b></h3>'
 			
 	ENDIF
-	
-RETU NIL
+
+RETU ''
 
 //	------------------------------------------------------- //
 
@@ -102,7 +98,7 @@ METHOD View( aSt, aData, lShow ) CLASS WDO
 		
 		cHtml += '</tr>'
 		
-		?? cHtml
+		//?? cHtml
 	
 	NEXT
 	

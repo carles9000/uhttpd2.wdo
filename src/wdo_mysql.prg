@@ -46,7 +46,7 @@ CLASS WDO_MySql FROM WDO
 	DATA cError 								INIT ''
 	DATA aFields 								INIT {}
 	DATA aLog 									INIT {}
-	DATA bError									INIT NIL 
+	
 	DATA nFields								INIT 0
 	DATA nSysCallConv
 	DATA nSysLong
@@ -117,8 +117,8 @@ METHOD New( cServer, cUsername, cPassword, cDatabase, nPort, cType, lLog, bError
 
 	if valtype( bError ) == 'B'	
 		::bError := bError
-	else
-		::bError := NIL		//	{|cError| AP_RPuts( '<br>' + cError ), .t. }
+	//else
+	//	::bError := NIL		//	{|cError| AP_RPuts( '<br>' + cError ), .t. }
 	endif
 		
 	::cServer		:= cServer
