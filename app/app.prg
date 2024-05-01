@@ -25,7 +25,8 @@ function WebServer()
 	local oServer 	:= Httpd2()
 	
 	
-	HB_SetEnv( 'WDO_PATH_MYSQL', "c:/xampp.64/htdocs/" )
+	//HB_SetEnv( 'WDO_PATH_MYSQL', "c:/xampp.64/htdocs/" )
+	HB_SetEnv( 'WDO_PATH_MYSQL', "c:/xampp/htdocs/" )
 	
 	oServer:SetPort( 81 )
 	oServer:SetDirFiles( 'data' )

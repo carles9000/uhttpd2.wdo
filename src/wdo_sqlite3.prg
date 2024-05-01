@@ -151,6 +151,7 @@ METHOD Exec( cSql ) CLASS WDO_Sqlite3
 	::cError	:= ''
 
 	try 
+	
 		lOk := sqlite3_exec( ::db, cSql ) == SQLITE_OK						
 		
 		IF sqlite3_errcode( ::db ) != SQLITE_OK

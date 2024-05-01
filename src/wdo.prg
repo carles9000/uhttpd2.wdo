@@ -27,7 +27,7 @@ CLASS WDO
 	METHOD Version()							INLINE WDO_VERSION
 	
 	METHOD SetError( cError )		
-	METHOD View( aSt, aData ) 
+	METHOD View( aSt, aData, lShow ) 
 	
 ENDCLASS
 
@@ -56,11 +56,13 @@ RETU NIL
 //	------------------------------------------------------- //
 
 
-METHOD View( aSt, aData ) CLASS WDO
+METHOD View( aSt, aData, lShow ) CLASS WDO
 
 	LOCAL nFields 	:= len( aSt )
 	LOCAL cHtml 	:= ''
 	LOCAL n, j, nLen
+	
+	hb_default( @lShow, .t. )
 	
 	cHtml := '<h3>View table</h3>'	
 	
@@ -86,11 +88,11 @@ METHOD View( aSt, aData ) CLASS WDO
 	
 	cHtml += '<tbody>'
 	
-	? cHtml 
+	//? cHtml 
 	
 	FOR n := 1 to nLen 
 	
-		cHtml := '<tr>'
+		cHtml += '<tr>'
 		
 		FOR j := 1 to nFields
 
@@ -104,9 +106,14 @@ METHOD View( aSt, aData ) CLASS WDO
 	
 	NEXT
 	
-	?? '</tbody></table><hr>'
+	//?? '</tbody></table><hr>'
+	cHtml += '</tbody></table><hr>'	
 
-RETU NIL
+	if lShow 
+		? cHtml
+	endif
+
+RETU cHtml
 
 //	------------------------------------------------------- //
 
